@@ -1,4 +1,7 @@
 
+
+//id-20181229-070203
+
 #include <stdio.h>
 #if defined(__linux__)
 #define MYOS 1
@@ -37,46 +40,6 @@ long splitfilenbr = 1;
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-
-void fseek_filesize(const char *filename)
-{
-    FILE *fp = NULL;
-    long off;
-
-    fp = fopen(filename, "r");
-    if (fp == NULL)
-    {
-        printf("failed to fopen %s\n", filename);
-        exit(EXIT_FAILURE);
-    }
-
-    if (fseek(fp, 0, SEEK_END) == -1)
-    {
-        printf("failed to fseek %s\n", filename);
-        exit(EXIT_FAILURE);
-    }
-
-    off = ftell(fp);
-    if (off == (long)-1)
-    {
-        printf("failed to ftell %s\n", filename);
-        exit(EXIT_FAILURE);
-    }
-
-    //printf("[*] fseek_filesize - file: %s, size: %ld\n", filename, off);
-    printf("%ld\n", off);
-
-    if (fclose(fp) != 0)
-    {
-        printf("failed to fclose %s\n", filename);
-        exit(EXIT_FAILURE);
-    }
-}
-
-
-
-
-
 
 
 
@@ -125,46 +88,6 @@ return fileordir;
 
 
 
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-void ncp( char *filenametarget,  char *filenamesource )
-{
-   FILE *source, *target; 
-   int ch ; 
-   source = fopen( filenamesource , "r");
-   if( source == NULL )
-   {
-      printf("Press any key to exit...\n");
-      exit(EXIT_FAILURE);
-   }
- 
-
-   char charo[PATH_MAX];  
-   snprintf( charo, PATH_MAX , "filencp-%04ld.out" , splitfilenbr  );
- 
-   printf("Source: %s\n",  filenamesource );
-   printf("Target: %s\n",  filenametarget );
-   printf("Tmp: %s\n",  charo );
-   printf("Copying...\n");
-  
-   target = fopen( filenametarget , "w");
-   fclose(target);
-
-   target = fopen( filenametarget , "ab+");
-   while( ( ch = fgetc(source) ) != EOF )
-   {
-      fputc(ch, target);
-      bitcounter ++;
-   }
-   fclose(target);
- 
-   printf("File copied successfully.\n");
-   fclose(source);
-}
-
-
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -201,7 +124,8 @@ void nsplit( char *filenamesource )
    {
        //if ( bitcounter == 2655776 )  // 2.5mb
        //if ( bitcounter == 12655776 )   // 12.5mb
-       if ( ( bitcounter >= 1 ) && ( bitcounter % 12655776 == 0))
+       // if ( ( bitcounter >= 1 ) && ( bitcounter % 12655776 == 0))  ////12mb
+       if ( ( bitcounter >= 1 ) && ( bitcounter % 20655776 == 0))  ////about 20 mb
        {
           fclose( target );
           splitfilenbr++;
@@ -251,23 +175,6 @@ int main( int argc, char *argv[])
       return 0;
 
 
-
-      ////////////////////////////////////////////////////////
-      if ( argc >= 2)
-      {
-         for( i = 1 ; i <= argc-1 ; i++) 
-         {
-            //printf( "=> %d/%d %s \n", i , argc , argv[ i ] );
-            bitcounter = 0;
-            //ncat_static( argv[ i ] );
-            printf("Size: %ld\n", bitcounter );
-            printf("Total size: ");
-            fseek_filesize( argv[i] );
-            printf("\n");
-         }
-      }
-
-   return 0;
 }
 
 
